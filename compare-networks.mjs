@@ -6,7 +6,7 @@ const mainnetRpc = createSolanaRpc(
 );
 // The Token-2022 program exists on both networks
 const targetAddress = address(
-  "8fdBEM4QaLfVSxzRe1qNwRB7CbEs2ZCENeQczBF5ChRz"
+  "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
 );
 async function getNetworkData(rpc, networkName) {
   const { value: balanceInLamports } = await rpc
@@ -14,7 +14,7 @@ async function getNetworkData(rpc, networkName) {
     .send();
   const balanceInSol = Number(balanceInLamports) / 1_000_000_000;
   const signatures = await rpc
-    .getSignaturesForAddress(targetAddress, { limit: 3 })
+    .getSignaturesForAddress(targetAddress, { limit: 5 })
     .send();
   console.log(`\n--- ${networkName} ---`);
   console.log(`Address : ${targetAddress}`);
