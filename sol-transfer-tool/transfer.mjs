@@ -14,10 +14,13 @@ import {
     signTransactionMessageWithSigners,
     getSignatureFromTransaction,
     sendAndConfirmTransactionFactory,
+    getBase64EncodedWireTransaction,
     lamports,
     devnet
 } from "@solana/kit";
 import { getTransferSolInstruction } from "@solana-program/system";
+
+import { transferWithConfirmation } from "./transactionlogic.js";
 
 // --- Configuration ---
 const RPC_URL = devnet("https://api.devnet.solana.com")
@@ -51,6 +54,7 @@ async function loadKeypair() {
     return keyPair;
 }
 
+
 // --- Main function ---
 async function main() {
     console.log("Solana Transfer Tool");
@@ -81,41 +85,53 @@ async function main() {
     }
 
     // 4. Build the transaction
-    const { value: latestBlockhash } = await rpc.getLatestBlockhash().send();
+    // const { value: latestBlockhash } = await rpc.getLatestBlockhash().send();
 
-    const transactionMessage = pipe(
-        createTransactionMessage({ version: 0 }),
-        (tx) => setTransactionMessageFeePayerSigner(sender, tx),
-        (tx) => setTransactionMessageLifetimeUsingBlockhash(latestBlockhash, tx),
-        (tx) => 
-            appendTransactionMessageInstruction(
-                getTransferSolInstruction({
-                    source: sender,
-                    destination: recipientAddress,
-                    amount: transferLamports,
-                }),
-                tx
-            )
-    );
+    // const transactionMessage = pipe(
+    //     createTransactionMessage({ version: 0 }),
+    //     (tx) => setTransactionMessageFeePayerSigner(sender, tx),
+    //     (tx) => setTransactionMessageLifetimeUsingBlockhash(latestBlockhash, tx),
+    //     (tx) => 
+    //         appendTransactionMessageInstruction(
+    //             getTransferSolInstruction({
+    //                 source: sender,
+    //                 destination: recipientAddress,
+    //                 amount: transferLamports,
+    //             }),
+    //             tx
+    //         )
+    // );
 
-    // 5. Sign the transaction
-    const signedTransaction = await signTransactionMessageWithSigners(transactionMessage);
-    const signature = getSignatureFromTransaction(signedTransaction);
+    // // 5. Sign the transaction
+    // const signedTransaction = await signTransactionMessageWithSigners(transactionMessage);
+    // const signature = getSignatureFromTransaction(signedTransaction);
 
-    // 6. Send and confirm
-    console.log("\nSending transaction...");
-    const sendAndConfirm = sendAndConfirmTransactionFactory({ rpc, rpcSubscriptions}); 
-    await sendAndConfirm(signedTransaction, { commitment: "confirmed" });
+    // // 6. Send and confirm
+    // console.log("\nSending transaction...");
+    // const sendAndConfirm = sendAndConfirmTransactionFactory({ rpc, rpcSubscriptions}); 
+    // await sendAndConfirm(signedTransaction, { commitment: "confirmed" });
 
-    console.log("Transaction confirmed!\n");
-    console.log("Signature:", signature);
-    console.log(`Explorer: https://explorer.solana.com/tx/${signature}?cluster=devnet`);
+    // console.log("Transaction confirmed!\n");
+    // console.log("Signature:", signature);
+    // console.log(`Explorer: https://explorer.solana.com/tx/${signature}?cluster=devnet`);
 
-    // 7. Show updated balance
-    const { value: newBalance } = await rpc.getBalance(sender.address).send();
-    const newBalanceInSol = Number(newBalance) / Number(LAMPORTS_PER_SOL);
-    console.log(`\nNew sender balance: ${newBalanceInSol} SOL`);
+    try{
+         // Replace steps 4 - 6 with the below call from transactionlogic.js
+        const signature = await transferWithConfirmation(rpc, sender, recipientAddress, solAmount);
+        console.log("Transaction succesful!");
+        console.log(`Signature ${signature}`);
+        console.log(`View on Solana Explorer:`);
+        console.log(`https://explorer.solana.com/tx/${signature}?cluster=devnet`);
 
+         // 6. Show updated balance
+        const { value: newBalance } = await rpc.getBalance(sender.address).send();
+        const newBalanceInSol = Number(newBalance) / Number(LAMPORTS_PER_SOL);
+        console.log(`\nNew sender balance: ${newBalanceInSol} SOL`);
+    } catch (error) {
+        console.error("\nTransaction failed:");
+        console.error(error.message);
+        process.exit(1);
+    }
 }
 
 main().catch((err) => {
