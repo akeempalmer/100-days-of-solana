@@ -1,0 +1,3 @@
+public key - 8svQrkV5EmDG3vHbSmnPPirTNEF9mMVGuYivD2VvNfRX
+location - ~/recipient-keypair.json
+transfer sig: 2mP3ayfHHQcdkXPuPmLAoU9buxVNxKetvwKodYJRxeVo6jsybQU1PuHeyGpJV4cXpFpRdHeVCDVgQE33LAVti4N8
