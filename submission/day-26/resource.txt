@@ -1,0 +1,8 @@
+Raw:
+
+Exploring Token 2022 Program on the mainnet on solana explorer is very interseting. Parts that caught my attention were the transaction history, and the slots. I am amazed by how fast these transactions move accross the network, especially for a huge big decentrialized network, keeping these within the IPV6 minimum transmission unit (MTU) size in very much remarkable at keeping these account data at reasonable speed to be scaled across the world. 
+
+
+Fixed:
+
+Exploring the Token 2022 Program on the Solana mainnet through the Solana Explorer has been very interesting. The parts that caught my attention the most were the transaction history and the slot architecture. I’m amazed by how quickly transactions propagate across the network, especially for such a large decentralized ecosystem. Keeping transactions within the IPv6 minimum transmission unit (MTU) size is particularly remarkable, as it helps maintain efficient account data transfer speeds and supports scalability across the globe.
