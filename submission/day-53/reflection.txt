@@ -1,0 +1,43 @@
+- Transfer 
+- This extension enables us the ability to set a transfer fee, when the recivier token recieves new balance to their account. There is a fee for transfers by protocol.
+
+apalmer@MacBook-Pro solana-100-days % spl-token display Duv3L7siwjed6EQevoTdpFbC3LNV8TGtQ4ffcuQ8h5go
+
+SPL Token Mint
+  Address: Duv3L7siwjed6EQevoTdpFbC3LNV8TGtQ4ffcuQ8h5go
+  Program: TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb
+  Supply: 1001000000000
+  Decimals: 6
+  Mint authority: 8fdBEM4QaLfVSxzRe1qNwRB7CbEs2ZCENeQczBF5ChRz
+  Freeze authority: (not set)
+Extensions
+  Transfer fees:
+    Current fee: 100bps
+    Current maximum: 1000000000000
+    Config authority: 8fdBEM4QaLfVSxzRe1qNwRB7CbEs2ZCENeQczBF5ChRz
+    Withdrawal authority: 8fdBEM4QaLfVSxzRe1qNwRB7CbEs2ZCENeQczBF5ChRz
+    Withheld fees: 0
+
+-- Interest Bearing 
+- This extension enables us to gain interest from holding a token balance, the raw data remains, and the interest is calculated at runtime against the timestamp of the balance and the timestamp of today. 
+
+apalmer@MacBook-Pro solana-100-days % spl-token display 5pGeAQnaLW15EFJngDVyeDMZo737epNw52iW2Ckxe9jb
+
+SPL Token Mint
+  Address: 5pGeAQnaLW15EFJngDVyeDMZo737epNw52iW2Ckxe9jb
+  Program: TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb
+  Supply: 1000000000000
+  Decimals: 6
+  Mint authority: 8fdBEM4QaLfVSxzRe1qNwRB7CbEs2ZCENeQczBF5ChRz
+  Freeze authority: (not set)
+Extensions
+  Interest-bearing:
+    Current rate: 5000bps
+    Average rate: 5000bps
+    Rate authority: 8fdBEM4QaLfVSxzRe1qNwRB7CbEs2ZCENeQczBF5ChRz
+  Transfer fees:
+    Current fee: 100bps
+    Current maximum: 1000000000000
+    Config authority: 8fdBEM4QaLfVSxzRe1qNwRB7CbEs2ZCENeQczBF5ChRz
+    Withdrawal authority: 8fdBEM4QaLfVSxzRe1qNwRB7CbEs2ZCENeQczBF5ChRz
+    Withheld fees: 0
