@@ -1,0 +1,75 @@
+---
+title: Understanding Solana Token-2022: Transfer Fees, Interest-Bearing Tokens, & Non-Transferable
+published: true
+tags: solana, web3, blockchain, 100daysofsolana
+---
+
+This week, I took a deep dive into **Solana Token-2022** (also known as **Token Extensions** or `spl-token-2022`). 
+
+If you're building on Solana, you've likely heard about Token-2022, but what actually *is* it?
+
+In short, Token Extensions are protocol-level configurations enabled directly on a token's **Mint Account**. Because these configurations exist at the mint level, every token account created under that mint automatically inherits those rules. 
+
+The best part? You get advanced features natively out of the box, without having to write custom Rust smart contracts (programs) to handle complex token logic.
+
+In this post, we'll explore three popular token extensions: **Transfer Fee**, **Interest-Bearing**, and **Non-Transferable**.
+
+---
+
+## 1. Transfer Fee Extension
+
+The **Transfer Fee Extension** allows token issuers to automatically collect a fee whenever tokens are transferred between accounts. 
+
+Because the fee check happens at the base protocol level, it's impossible for secondary transfers or dApps to bypass it. Fees are configured using **basis points** (where 100 basis points = 1%).
+
+### Primary Use Case: Payments & Treasuries
+If your protocol or merchant accepts your native token as payment, you can set a transfer fee where a small percentage of every transaction is automatically routed to a designated authority or treasury account.
+
+---
+
+## 2. Interest-Bearing Extension
+
+This extension brings native yield mechanics on-chain, allowing tokens to dynamically accumulate interest over time simply by residing in a wallet.
+
+What makes this extension fascinating is **how** the balance calculation works under the hood:
+
+> **How Interest Calculation Works:**
+> Suppose you transfer **500 coins** to John's wallet. John's on-chain **raw balance** remains exactly 500. Over six months, John's balance visually increases in the UI based on the set interest rate, but the raw balance on-chain never changes until a state transition occurs.
+
+Solana calculates the visual display balance dynamically using three key variables:
+1. **Original Timestamp:** When the raw balance was last updated.
+2. **Current Timestamp:** When the balance UI/RPC is queried.
+3. **Interest Basis Rate:** The configured interest rate.
+
+The actual interest is only settled on-chain when the tokens are moved or touched.
+
+---
+
+## 3. Non-Transferable Extension
+
+For developers working in industries where **KYC/KYB compliance** is critical, this extension provides an elegant protocol-level solution.
+
+By enabling this tag, a token becomes permanently tied to the recipient wallet upon minting (similar to a "Soulbound Token"). It cannot be transferred to any other address under any condition.
+
+### Primary Use Case: Compliance & Credentials
+* On-chain KYC/KYB identity badges
+* Non-transferable event tickets or educational certificates
+* Corporate credentials and soulbound access tokens
+
+---
+
+## Combining Extensions: Enforcing Protocol Policies
+
+The real superpower of Token-2022 is **stacking extensions**. You can combine multiple configurations on a single mint to build complex behavior without writing custom Rust code.
+
+However, the combination must make logical sense:
+* **Valid Stack:** *Transfer Fee* + *Interest Bearing* = Yield-generating payment token that collects a fee on transfer.
+* **Invalid/Redundant Stack:** *Transfer Fee* + *Non-Transferable* = Unnecessary, because a token that cannot be transferred will never trigger a transfer fee.
+
+---
+
+## Conclusion
+
+Solana's Token Extensions significantly reduce development overhead while increasing protocol level security. Enforcing complex token policies directly at the mint level, without custom smart contracts opens up huge possibilities for Web3 devs.
+
+Are you using Token-2022 in your project? Let me know in the comments which extensions you're building with!
