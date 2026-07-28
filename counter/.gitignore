@@ -1,11 +1,3 @@
-wallet.json
-recipient.json
-
-**/node_modules
-resource.txt
-
-.DS_Store
-
 .anchor
 .DS_Store
 target
