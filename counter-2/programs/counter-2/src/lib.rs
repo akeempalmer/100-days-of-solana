@@ -6,6 +6,15 @@ declare_id!("DZXem38iWZzHKQkgmQuSGYkXBnhevfwCnwqddzaLmiDD");
 pub mod counter_2 {
     use super::*;
 
+     pub fn init_config(ctx: Context<InitConfig>) -> Result<()> {
+        let config = &mut ctx.accounts.config;
+        config.admin = ctx.accounts.admin.key();
+        config.paused = false;
+        config.total_counters = 0;
+        config.bump = ctx.bumps.config;
+        Ok(())
+    }
+
     pub fn init_counter(ctx: Context<InitCounter>) -> Result<()> {
         let counter = &mut ctx.accounts.counter;
         counter.user = ctx.accounts.user.key();
@@ -14,6 +23,11 @@ pub mod counter_2 {
 
         let config = &mut ctx.accounts.config;
         config.total_counters = config.total_counters.checked_add(1).unwrap();
+        Ok(())
+    }
+
+    pub fn set_paused(ctx: Context<SetPaused>, paused: bool) -> Result<()> {
+        ctx.accounts.config.paused = paused;
         Ok(())
     }
 
@@ -26,19 +40,11 @@ pub mod counter_2 {
         Ok(())
     }
 
-    pub fn init_config(ctx: Context<InitConfig>) -> Result<()> {
-        let config = &mut ctx.accounts.config;
-        config.admin = ctx.accounts.admin.key();
-        config.paused = false;
-        config.total_counters = 0;
-        config.bump = ctx.bumps.config;
+    pub fn close_counter(ctx: Context<CloseCounter>) -> Result<()> {
         Ok(())
     }
 
-    pub fn set_paused(ctx: Context<SetPaused>, paused: bool) -> Result<()> {
-        ctx.accounts.config.paused = paused;
-        Ok(())
-    }
+   
 }
 
 #[derive(Accounts)]
@@ -123,6 +129,20 @@ pub struct Config {
     pub paused: bool,
     pub total_counters: u64,
     pub bump: u8,
+}
+
+#[derive(Accounts)]
+pub struct CloseCounter<'info> {
+    #[account(
+        mut,
+        close = user,
+        seeds = [b"counter", user.key().as_ref()],
+        bump = counter.bump,
+        has_one = user,
+    )]
+    pub counter: Account<'info, Counter>,
+    #[account(mut)]
+    pub user: Signer<'info>,
 }
 
 #[error_code]

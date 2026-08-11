@@ -92,4 +92,34 @@ describe("counter with config", () => {
         } 
         await program.methods.setPaused(false).rpc();
     });
+
+    it("closes a counter and refunds the rent", async () => {
+        const user = provider.wallet.publicKey;
+        const [counterPda] = anchor.web3.PublicKey.findProgramAddressSync(
+            [Buffer.from("counter"), user.toBuffer()],
+            program.programId
+        );
+
+        // Initialize a fresh counter if the previous test already closed it.
+        const existing = await provider.connection.getAccountInfo(counterPda);
+        if (existing === null) {
+            await program.methods.initCounter().rpc();
+        }
+
+        const counterAccount = await provider.connection.getAccountInfo(counterPda);
+        const rentLamports = counterAccount!.lamports;
+        const balanceBefore = await provider.connection.getBalance(user);
+
+        await program.methods.closeCounter().rpc();
+
+        const counterAfter = await provider.connection.getAccountInfo(counterPda);
+        const balanceAfter = await provider.connection.getBalance(user);
+
+        if (counterAfter !== null ) {
+            throw new Error("counter account still exists after close");
+        }
+
+        console.log("rent refunded (lamports):", rentLamports);
+        console.log("new wallet change (lamports):", balanceAfter - balanceBefore);
+    })
 });
